@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ejemplo 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+
+</head>
+
+
+<div class="container-fluid mt-3" id="app">
+    <input type="text" class="form-control" v-model="criterioDeBusquedaNombre" placeholder="Ingresar un nombre">
+    <div v-if=!criterioDeBusquedaNombre class="alert alert-danger mt-1">Campo Requerido</div>
+    <div v-else-if=criterioDeBusquedaNombre.length<3 class="alert alert-danger mt-1">Minimo 3 caracteres</div>
+    <br>
+    <input type="number" class="form-control" v-model="criterioDeBusquedaDni" placeholder="Ingresar un dni">
+    <div v-if=!criterioDeBusquedaDni class="alert alert-danger mt-1">Campo Requerido</div>
+    <div v-else-if=criterioDeBusquedaDni.length<3 class="alert alert-danger mt-1">Minimo 3 caracteres</div>
+    <br>
+    <div class="card-deck m-0">
+        <div class="row">
+            <div class="col" v-for="persona in personasFiltradas">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">dni {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            criterioDeBusquedaNombre: '',
+            criterioDeBusquedaDni: '',
+            valor: 0,
+            mostrar:false,
+            //Aquí, en este array es donde tienen que agregar su información
+            personas: [
+                {
+                    nombre: "Daniel",
+                    apellido: "Sanchez",
+                    correo: "danielsanchez68@hotmail.com",
+                    dni: "20442873"
+                },
+                {
+                    nombre: "fede",
+                    apellido: "cammarota",
+                    correo: "cammarotafederico@hotmail.com",
+                    dni: "34755088"
+                },
+                {
+                    nombre: "fede",
+                    apellido: "cammez",
+                    correo: "pedroGomez@hotmail.com",
+                    dni: "25812423"
+                },
+            ]
+
+        },
+        computed: {
+            /*    personasFiltradas() {
+                   return this.personas.filter((persona) => {
+                       let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
+                       return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
+                   });
+               }
+           }*/
+            personasFiltradas() {
+                return this.personas.filter((persona) => {
+                    let nombreApellido = `${persona.nombre} ${persona.apellido}`
+                    return nombreApellido.toLowerCase().includes(this.criterioDeBusquedaNombre.toLowerCase()) &&
+                        persona.dni.toLowerCase().includes(this.criterioDeBusquedaDni.toLowerCase())
+
+                });
+            }
+        },
+        methods: {
+            getNombreCompleto(persona) {
+                return `${persona.nombre} ${persona.apellido}`
+            }
+        },  
+    });
+</script>
